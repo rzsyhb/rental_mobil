@@ -1,12 +1,15 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "rental_mobil";
+// Mengambil kredensial dari Railway, jika tidak ada (di lokal), gunakan default
+$host = getenv('MYSQLHOST') ?: "localhost";
+$user = getenv('MYSQLUSER') ?: "root";
+$pass = getenv('MYSQLPASSWORD') ?: "";
+$db   = getenv('MYSQLDATABASE') ?: "rental_mobil";
+$port = getenv('MYSQLPORT') ?: "3306";
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
-$server = @mysqli_connect($host, $user, $pass);
+// Tambahkan variabel $port ke dalam fungsi mysqli_connect
+$server = @mysqli_connect($host, $user, $pass, "", $port);
 if (!$server) {
     die("Koneksi MySQL gagal: " . mysqli_connect_error());
 }
