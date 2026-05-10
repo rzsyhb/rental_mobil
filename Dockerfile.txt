@@ -1,14 +1,14 @@
-# Menggunakan mesin PHP versi 8.2 yang sudah sepaket dengan web server Apache
+# Pakai mesin PHP 8.2 yang sudah ada Apache-nya
 FROM php:8.2-apache
 
-# Menginstal ekstensi database agar fitur koneksi PHP native kamu berfungsi
+# Install ekstensi MySQLi supaya error tadi hilang
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Mengaktifkan mod_rewrite (penting jika proyek kamu menggunakan file .htaccess)
+# Aktifkan mod_rewrite (berguna untuk .htaccess)
 RUN a2enmod rewrite
 
-# Menyalin semua file rental_mobil_kita milikmu ke dalam folder publik Apache
-COPY . /var/www/rental_mobil_kita
+# Copy semua file rental mobilmu ke folder publik server
+COPY . /var/www/html/
 
-# Mengubah port default Apache agar cocok dengan sistem dinamis Railway
+# Atur port dinamis sesuai permintaan Railway
 RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
