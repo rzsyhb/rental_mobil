@@ -11,4 +11,4 @@ RUN a2enmod rewrite
 COPY . /var/www/html/
 
 # Atur port dinamis sesuai permintaan Railway
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+RUN sed -i 's/8080/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
