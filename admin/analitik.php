@@ -94,12 +94,25 @@ function get_dashboard_analitik_data($conn, $tahunMobil, $tanggalMulai, $tanggal
     }
 
     $harianQuery = mysqli_query($conn, "
-        SELECT DATE(tanggal_sewa) AS tanggal, COUNT(*) AS jumlah
-        FROM transaksi
-        WHERE tanggal_sewa BETWEEN '$tanggalMulaiSql' AND '$tanggalSelesaiSql'
-        GROUP BY DATE(tanggal_sewa)
-        ORDER BY tanggal ASC
-    ");
+    SELECT
+        DATE(tanggal_sewa) AS tanggal,
+
+        SUM(
+            CASE
+                WHEN status IN (
+                    'disewa',
+                    'selesai'
+                )
+                THEN 1
+                ELSE 0
+            END
+        ) AS jumlah
+
+    FROM transaksi
+    WHERE tanggal_sewa BETWEEN '$tanggalMulaiSql' AND '$tanggalSelesaiSql'
+    GROUP BY DATE(tanggal_sewa)
+    ORDER BY tanggal ASC
+");
     $hari = []; $jumlah = [];
     while ($harianQuery && $d = mysqli_fetch_assoc($harianQuery)) {
         $hari[] = $d['tanggal'];
