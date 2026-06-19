@@ -36,7 +36,18 @@ function get_dashboard_analitik_data($conn, $tahunMobil, $tanggalMulai, $tanggal
     $pendapatanBulanan = mysqli_query($conn, "
         SELECT DATE_FORMAT(tanggal_sewa, '%Y-%m') AS label_bulan,
                COALESCE(SUM(CASE WHEN status IN ('terverifikasi','disewa','selesai') THEN total_harga ELSE 0 END),0) AS total_pendapatan,
-               COUNT(*) AS total_booking
+               SUM(
+    CASE
+        WHEN status IN (
+            'menunggu konfirmasi',
+            'terverifikasi',
+            'disewa',
+            'selesai'
+        )
+        THEN 1
+        ELSE 0
+    END
+) AS total_booking
         FROM transaksi
         WHERE tanggal_sewa >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
         GROUP BY DATE_FORMAT(tanggal_sewa, '%Y-%m')
